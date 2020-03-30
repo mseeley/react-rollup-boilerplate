@@ -1,0 +1,16 @@
+# Node: Ignore all node_modules directories.
+**/node_modules/
+
+# Node: build directories`
+dist/
+
+# Misc
+.DS_Store
+.DS_Store?
+*.log
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+**/private/
+.vscode
