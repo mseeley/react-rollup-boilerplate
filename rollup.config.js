@@ -44,7 +44,7 @@ export default (args) => {
   const isProduction = process.env.NODE_ENV === "production";
   const options = {
     [minify]: isProduction,
-    [publicPath]: "",
+    [publicPath]: "/",
     [reload]: false,
     [server]: false,
     [verbose]: false,
