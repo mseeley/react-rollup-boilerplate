@@ -64,6 +64,9 @@ export default (args) => {
         sourcemap: isProduction ? "hidden" : true,
       },
     ],
+    manualChunks(id) {
+      return id.includes("node_modules") ? "vendor" : undefined;
+    },
     plugins: [
       del({
         runOnce: process.env.ROLLUP_WATCH === "true",
