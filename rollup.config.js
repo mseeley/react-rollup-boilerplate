@@ -1,11 +1,12 @@
 /* eslint-env node */
-import path from "path";
+import alias from "@rollup/plugin-alias";
 import commonjs from "@rollup/plugin-commonjs";
 import html from "@rollup/plugin-html";
 import resolve from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
 import url from "@rollup/plugin-url";
 import svgr from "@svgr/rollup";
+import path from "path";
 import babel from "rollup-plugin-babel";
 import del from "rollup-plugin-delete";
 import livereload from "rollup-plugin-livereload";
@@ -15,9 +16,13 @@ import { terser } from "rollup-plugin-terser";
 // import copy from "rollup-plugin-copy";
 
 const dist = path.join(__dirname, "dist");
-const node_modules = "node_modules/**";
-const src = "src/**";
-const port = 3000;
+const src = path.join(__dirname, "src");
+const srcGlob = "src/**/*";
+
+// No default, uses the default port if this env var is undefined.
+const reloadPort = undefined;
+const serverHost = "0.0.0.0";
+const serverPort = 3000;
 const title = "App Title";
 
 // Magic naming convention to avoid unrecognized option warnings.
@@ -27,6 +32,13 @@ const reload = "config-reload";
 const server = "config-server";
 const verbose = "config-verbose";
 const publicPath = "config-public-path";
+
+function createNamedExports(modules) {
+  return modules.reduce(
+    (acc, name) => Object.assign(acc, { [name]: Object.keys(require(name)) }),
+    {}
+  );
+}
 
 export default (args) => {
   const isProduction = process.env.NODE_ENV === "production";
@@ -55,12 +67,18 @@ export default (args) => {
     plugins: [
       del({
         runOnce: process.env.ROLLUP_WATCH === "true",
-        targets: [dist],
+        // Remove the contents but not the dist dir to avoid permissions error
+        // when dist/ is a Docker volume.
+        targets: [`${dist}/**/*`],
         verbose: options[verbose],
+      }),
+      alias({
+        // Alias configuration can also be found in .eslintrc.
+        entries: [{ find: "~", replacement: src }],
       }),
       resolve(),
       babel({
-        include: src,
+        include: srcGlob,
       }),
       replace({
         // Execute `replace` before `commonjs`.
@@ -73,15 +91,16 @@ export default (args) => {
       }),
       commonjs({
         ignoreGlobal: true,
-        include: node_modules,
-        namedExports: {
+        // Must address own and hoisted cjs node_modules.
+        include: ["node_modules/**", "../../node_modules/**"],
+        namedExports: createNamedExports([
           // See: https://rollupjs.org/guide/en/#error-name-is-not-exported-by-module
           // See: https://github.com/rollup/rollup-plugin-commonjs/issues/290#issuecomment-537683484
           // See: https://github.com/facebook/react/issues/11503
-          react: Object.keys(require("react")),
-          "react-dom": Object.keys(require("react-dom")),
-          "prop-types": Object.keys(require("prop-types")),
-        },
+          "react",
+          "react-dom",
+          "prop-types",
+        ]),
         sourceMap: false,
       }),
       url({
@@ -97,24 +116,28 @@ export default (args) => {
       }),
       options[minify] && terser(),
       html({
-        title,
         publicPath: options[publicPath],
+        title,
       }),
       options[server] &&
         serve({
           contentBase: dist,
-          port,
+          historyApiFallback: true,
+          host: serverHost,
+          port: serverPort,
           verbose: options[verbose],
         }),
       options[reload] &&
         livereload({
+          debug: options[verbose],
+          port: reloadPort,
           verbose: options[verbose],
           watch: [dist],
         }),
     ],
     watch: {
       clearScreen: true,
-      include: src,
+      include: srcGlob,
     },
   };
 };

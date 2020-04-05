@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Acid from "./acid.svg";
+import Acid from "~/acid.svg";
 
-import("./helpers/helloWorld.js").then(({ default: greeting }) =>
+import("~/helpers/helloWorld.js").then(({ default: greeting }) =>
   console.log(`${greeting()}!! - environment: ${JSON.stringify({}, null, 2)}`)
 );
 
