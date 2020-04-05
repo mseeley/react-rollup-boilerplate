@@ -18,7 +18,9 @@
   ],
   "env": {
     "development": {
-      "presets": [["@babel/preset-react", { "development": true }]]
+      // Hard-coded to false to avoid a Rollup warning.
+      // See: https://rollupjs.org/guide/en/#error-this-is-undefined
+      "presets": [["@babel/preset-react", { "development": false }]]
     },
     "production": {
       "plugins": [
