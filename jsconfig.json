@@ -1,0 +1,13 @@
+{
+  "checkJs": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "experimentalDecorators": true,
+    "jsx": "react",
+    "paths": {
+      "~/*": ["src/*"]
+    }
+  },
+  "exclude": ["dist", "node_modules"],
+  "target": "es2020"
+}
