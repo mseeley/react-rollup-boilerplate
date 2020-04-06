@@ -1,34 +1,44 @@
 /* eslint-env node */
+const path = require("path");
 const resolve = require("resolve");
 
-const aliasPatterns = new Map();
 const resolveCache = new Map();
-const expression = /\/(.*)\/(.*)/;
+const relativePattern = /^[./]+/;
+const aliasPattern = /^~\//;
+const srcDir = path.resolve(__dirname, "../src");
 
 exports.interfaceVersion = 2;
 
 exports.resolve = (source, file, config) => {
-  if (!resolveCache.has(source)) {
-    const { pattern, replacement } = config;
-
-    if (!aliasPatterns.get(pattern)) {
-      aliasPatterns.set(
-        pattern,
-        new RegExp(...pattern.match(expression).slice(1))
-      );
-    }
-
-    const aliasPattern = aliasPatterns.get(pattern);
-    const module = aliasPattern.test(source)
-      ? source.replace(aliasPattern, replacement)
-      : source;
-
-    try {
-      resolveCache.set(source, { found: true, path: resolve.sync(module) });
-    } catch (err) {
-      resolveCache.set(source, { found: false });
-    }
+  if (resolveCache.has(source)) {
+    return resolveCache.get(source);
   }
 
-  return resolveCache.get(source);
+  let basedir;
+  let module;
+  let result;
+
+  if (aliasPattern.test(source)) {
+    basedir = srcDir;
+    module = source.replace(aliasPattern, "./");
+  } else if (relativePattern.test(source)) {
+    basedir = path.dirname(file);
+    module = source;
+  } else {
+    module = source;
+  }
+
+  try {
+    result = {
+      found: true,
+      path: resolve.sync(module, { basedir }),
+    };
+  } catch (error) {
+    console.error("Cannot resolve", source, "using", module, "from", file);
+    result = { found: false };
+  }
+
+  resolveCache.set(source, result);
+
+  return result;
 };

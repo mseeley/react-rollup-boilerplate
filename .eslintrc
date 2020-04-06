@@ -108,14 +108,7 @@
   },
 
   "settings": {
-    "import/resolver": {
-      "./build/eslint-import-resolver.cjs": {
-        // The `pattern` is replaced by `replacement` The modules are resolved
-        // relative to the custom import resolver.
-        "pattern": "/^~/",
-        "replacement": "../src"
-      }
-    },
+    "import/resolver": "./build/eslint-import-resolver.cjs",
     "react": {
       "version": "detect"
     }
