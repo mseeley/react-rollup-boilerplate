@@ -18,6 +18,7 @@ import { terser } from "rollup-plugin-terser";
 const dist = path.join(__dirname, "dist");
 const src = path.join(__dirname, "src");
 const srcGlob = "src/**/*";
+const nodeModulesGlobs = ["node_modules/**", "../../node_modules/**"];
 
 // No default, uses the default port if this env var is undefined.
 const reloadPort = undefined;
@@ -86,16 +87,21 @@ export default (args) => {
       replace({
         // Execute `replace` before `commonjs`.
         // See: https://reactjs.org/docs/optimizing-performance.html#rollup
-        __PRODUCTION__: isProduction,
+        include: nodeModulesGlobs,
         // See: https://github.com/rollup/rollup/issues/487#issuecomment-177596512
         "process.env.NODE_ENV": JSON.stringify(
           isProduction ? "production" : "development"
         ),
       }),
+      replace({
+        __DEV__: !isProduction,
+        __PRODUCTION__: isProduction,
+        include: srcGlob,
+      }),
       commonjs({
         ignoreGlobal: true,
         // Must address own and hoisted cjs node_modules.
-        include: ["node_modules/**", "../../node_modules/**"],
+        include: nodeModulesGlobs,
         namedExports: createNamedExports([
           // See: https://rollupjs.org/guide/en/#error-name-is-not-exported-by-module
           // See: https://github.com/rollup/rollup-plugin-commonjs/issues/290#issuecomment-537683484
