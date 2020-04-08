@@ -19,7 +19,7 @@
     "@babel/plugin-proposal-optional-chaining": "7.9.0",
     "@babel/plugin-transform-react-constant-elements": "7.9.0",
     "@babel/plugin-transform-react-inline-elements": "7.9.0",
-    "@babel/preset-env": "7.9.0",
+    "@babel/preset-env": "7.9.5",
     "@babel/preset-react": "7.9.4",
     "@rollup/plugin-alias": "3.0.1",
     "@rollup/plugin-commonjs": "11.0.2",
