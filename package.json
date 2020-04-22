@@ -42,7 +42,7 @@
     "prettier": "2.0.4",
     "prop-types": "15.7.2",
     "resolve": "1.16.1",
-    "rollup": "2.6.1",
+    "rollup": "2.7.1",
     "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-copy": "3.3.0",
     "rollup-plugin-delete": "1.2.0",
