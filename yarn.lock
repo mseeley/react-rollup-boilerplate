@@ -935,10 +935,10 @@
     magic-string "^0.25.2"
     resolve "^1.11.0"
 
-"@rollup/plugin-html@0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@rollup/plugin-html/-/plugin-html-0.1.1.tgz#0af548c7bf379a654480f0cbc17697f405a4ac1d"
-  integrity sha512-CSrMUBAsNeQunUStd+H/a4zcrKswJq93XSCcUv8EXyhhDN9Xp4NKuUnag8i0pFvh+nq5Way+OzK6XVcgXR9adg==
+"@rollup/plugin-html@0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-html/-/plugin-html-0.2.3.tgz#bed48fc18dbde345c0ef09b0b53a165d7bd3b7cd"
+  integrity sha512-efx8Ud1FWaHmj3Es5parp6uRt1DPyKq9A8t1GEZoNsYB4UTQQIL8PsjxcJOlH+P3QKRsSv1rIJhiMvuG4+kfwg==
 
 "@rollup/plugin-node-resolve@7.1.3":
   version "7.1.3"
